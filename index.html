@@ -320,82 +320,32 @@
 
     </div>
 
+    <!-- Audio externo para la invitación -->
+    <audio id="magicAudio" src="cancion_rapunzel.mp3" preload="auto" loop></audio>
+
     <!-- Script del Sistema de Video, Animación y Audio -->
     <script>
-        // --- CONFIGURACIÓN DE AUDIO MÁGICO (Web Audio API) ---
-        let audioCtx = null;
+        // --- CONFIGURACIÓN DE AUDIO MÁGICO ---
+        const magicAudio = document.getElementById('magicAudio');
         let isMusicPlaying = false;
-        let melodyInterval = null;
-
-        const melody = [
-            [261.63, 400, 500], // Do4
-            [293.66, 400, 500], // Re4
-            [329.63, 600, 700], // Mi4
-            [293.66, 400, 500], // Re4
-            [329.63, 400, 500], // Mi4
-            [349.23, 600, 700], // Fa4
-            [392.00, 800, 1000], // Sol4
-            [349.23, 400, 500], // Fa4
-            [329.63, 400, 500], // Mi4
-            [293.66, 800, 1200]  // Re4
-        ];
-        let noteIndex = 0;
-
-        function playNote(freq, duration) {
-            if (!audioCtx) return;
-            try {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                
-                osc.type = 'sine';
-                osc.frequency.value = freq;
-                
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration / 1000);
-                
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                
-                osc.start();
-                osc.stop(audioCtx.currentTime + duration / 1000);
-            } catch (e) {
-                console.log("Audio error: ", e);
-            }
-        }
-
-        function playMelodyLoop() {
-            if (!isMusicPlaying) return;
-            const currentNote = melody[noteIndex];
-            playNote(currentNote[0], currentNote[1]);
-            
-            noteIndex = (noteIndex + 1) % melody.length;
-            melodyInterval = setTimeout(playMelodyLoop, currentNote[2]);
-        }
-
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-        }
 
         function toggleMusic() {
-            initAudio();
             const musicBtn = document.getElementById('musicBtn');
             if (isMusicPlaying) {
                 isMusicPlaying = false;
-                clearTimeout(melodyInterval);
+                magicAudio.pause();
                 musicBtn.classList.remove('text-amber-300', 'animate-pulse');
                 musicBtn.classList.add('text-gray-400');
                 musicBtn.innerHTML = '<i class="fas fa-music-slash"></i>';
             } else {
                 isMusicPlaying = true;
+                magicAudio.volume = 0.6;
+                magicAudio.play().catch(() => {
+                    // No interrumpir si el navegador bloquea autoplay.
+                });
                 musicBtn.classList.add('text-amber-300', 'animate-pulse');
                 musicBtn.classList.remove('text-gray-400');
                 musicBtn.innerHTML = '<i class="fas fa-music"></i>';
-                playMelodyLoop();
             }
         }
 
