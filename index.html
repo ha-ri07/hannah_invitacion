@@ -237,7 +237,8 @@
           </button>
 
           <p class="text-[11px] text-amber-300/80 mt-4">
-            <i class="fas fa-volume-up"></i> Toca el botón para ver la invitación y disfrutar la música.
+            <i class="fas fa-volume-up"></i> Toca el botón para ver la
+            invitación y disfrutar la música.
           </p>
         </div>
       </div>
@@ -537,9 +538,6 @@
               >
                 <option value="1">1 Persona</option>
                 <option value="2" selected>2 Personas</option>
-                <option value="3">3 Personas</option>
-                <option value="4">4 Personas</option>
-                <option value="5+">5 o más Personas</option>
               </select>
             </div>
           </div>
@@ -642,22 +640,28 @@
             updateAudioIndicator(false);
           }
         } else if (shouldResumeOnVisible) {
-          magicAudio.play().then(() => {
-            updateAudioIndicator(true);
-          }).catch(() => {
-            // No interrumpir si el navegador bloquea el reanudar automático.
-          });
+          magicAudio
+            .play()
+            .then(() => {
+              updateAudioIndicator(true);
+            })
+            .catch(() => {
+              // No interrumpir si el navegador bloquea el reanudar automático.
+            });
           shouldResumeOnVisible = false;
         }
       }
 
       function tryResumeAudio() {
         if (magicAudio.paused) {
-          magicAudio.play().then(() => {
-            updateAudioIndicator(true);
-          }).catch(() => {
-            // No interrumpir si el navegador bloquea el reanudar automático.
-          });
+          magicAudio
+            .play()
+            .then(() => {
+              updateAudioIndicator(true);
+            })
+            .catch(() => {
+              // No interrumpir si el navegador bloquea el reanudar automático.
+            });
         }
         magicAudio.muted = false;
         updateAudioIndicator(!magicAudio.muted);
